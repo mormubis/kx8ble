@@ -1,6 +1,6 @@
 import { buchholz, dutch } from '@echecs/swiss';
 import { Tournament } from '@echecs/tournament';
-import { createContext, useCallback, useMemo, useReducer } from 'react';
+import { createContext, useCallback, useMemo, useRef, useState } from 'react';
 
 import { openTournament, saveTournament } from '@/lib/file.js';
 
@@ -14,19 +14,11 @@ import type {
 import type { Tournament as TrfTournament } from '@echecs/trf';
 import type { JSX, ReactNode } from 'react';
 
-/* ── State ── */
+/* ── Types ── */
 
 interface TournamentMetadata {
   createdAt: string;
   name: string;
-}
-
-interface TournamentState {
-  currentPairings: PairingResult | undefined;
-  metadata: TournamentMetadata | undefined;
-  players: PlayerEntry[];
-  tournament: Tournament | undefined;
-  trfSource: TrfTournament | undefined;
 }
 
 /** Extended player with app-local display fields */
@@ -35,114 +27,6 @@ interface PlayerEntry {
   id: string;
   name: string;
   rating: number;
-}
-
-/* ── Actions ── */
-
-type TournamentAction =
-  | { game: Omit<Game, 'round'>; type: 'RECORD_RESULT' }
-  | { id: string; type: 'REMOVE_PLAYER' }
-  | {
-      metadata: TournamentMetadata;
-      players: PlayerEntry[];
-      tournament: Tournament;
-      trfSource?: TrfTournament;
-      type: 'LOAD_TOURNAMENT';
-    }
-  | { player: PlayerEntry; type: 'ADD_PLAYER' }
-  | { player: PlayerEntry; type: 'UPDATE_PLAYER' }
-  | { type: 'PAIR_ROUND' }
-  | { metadata: TournamentMetadata; rounds: number; type: 'START_TOURNAMENT' };
-
-const INITIAL_STATE: TournamentState = {
-  currentPairings: undefined,
-  metadata: undefined,
-  players: [],
-  tournament: undefined,
-  trfSource: undefined,
-};
-
-function reducer(
-  state: TournamentState,
-  action: TournamentAction,
-): TournamentState {
-  switch (action.type) {
-    case 'ADD_PLAYER': {
-      return { ...state, players: [...state.players, action.player] };
-    }
-
-    case 'LOAD_TOURNAMENT': {
-      return {
-        ...state,
-        currentPairings: undefined,
-        metadata: action.metadata,
-        players: action.players,
-        tournament: action.tournament,
-        trfSource: action.trfSource,
-      };
-    }
-
-    case 'PAIR_ROUND': {
-      if (!state.tournament) {
-        return state;
-      }
-
-      const pairings = state.tournament.pairRound();
-
-      return { ...state, currentPairings: pairings };
-    }
-
-    case 'RECORD_RESULT': {
-      if (!state.tournament) {
-        return state;
-      }
-
-      state.tournament.recordResult(action.game);
-
-      return { ...state };
-    }
-
-    case 'REMOVE_PLAYER': {
-      return {
-        ...state,
-        players: state.players.filter((p) => p.id !== action.id),
-      };
-    }
-
-    case 'START_TOURNAMENT': {
-      const tournamentPlayers: Player[] = state.players.map((p) => ({
-        id: p.id,
-        rating: p.rating || undefined,
-      }));
-
-      const tournament = new Tournament({
-        pairingSystem: dutch,
-        players: tournamentPlayers,
-        rounds: action.rounds,
-      });
-
-      return {
-        ...state,
-        currentPairings: undefined,
-        metadata: action.metadata,
-        tournament,
-        trfSource: undefined,
-      };
-    }
-
-    case 'UPDATE_PLAYER': {
-      return {
-        ...state,
-        players: state.players.map((p) =>
-          p.id === action.player.id ? action.player : p,
-        ),
-      };
-    }
-
-    default: {
-      return state;
-    }
-  }
 }
 
 /* ── Context ── */
@@ -179,49 +63,103 @@ interface TournamentProviderProperties {
 function TournamentProvider({
   children,
 }: TournamentProviderProperties): JSX.Element {
-  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [players, setPlayers] = useState<PlayerEntry[]>([]);
+  const [metadata, setMetadata] = useState<TournamentMetadata>();
+  const [currentPairings, setCurrentPairings] = useState<PairingResult>();
+
+  // Tournament is a mutable object — keep in a ref and use a version counter
+  // to signal React when it changes.
+  const tournamentReference = useRef<Tournament | undefined>(undefined);
+  const trfSourceReference = useRef<TrfTournament | undefined>(undefined);
+  const [version, setVersion] = useState(0);
+
+  const bump = useCallback(() => {
+    setVersion((v) => v + 1);
+  }, []);
+
+  const tournament = tournamentReference.current;
 
   const addPlayer = useCallback((player: PlayerEntry) => {
-    dispatch({ player, type: 'ADD_PLAYER' });
+    setPlayers((previous) => [...previous, player]);
   }, []);
 
   const removePlayer = useCallback((id: string) => {
-    dispatch({ id, type: 'REMOVE_PLAYER' });
+    setPlayers((previous) => previous.filter((p) => p.id !== id));
   }, []);
 
   const updatePlayer = useCallback((player: PlayerEntry) => {
-    dispatch({ player, type: 'UPDATE_PLAYER' });
+    setPlayers((previous) =>
+      previous.map((p) => (p.id === player.id ? player : p)),
+    );
   }, []);
 
   const startTournament = useCallback(
-    (metadata: TournamentMetadata, rounds: number) => {
-      dispatch({ metadata, rounds, type: 'START_TOURNAMENT' });
+    (meta: TournamentMetadata, rounds: number) => {
+      setPlayers((current) => {
+        const tournamentPlayers: Player[] = current.map((p) => ({
+          id: p.id,
+          rating: p.rating || undefined,
+        }));
+
+        tournamentReference.current = new Tournament({
+          pairingSystem: dutch,
+          players: tournamentPlayers,
+          rounds,
+        });
+
+        return current;
+      });
+
+      trfSourceReference.current = undefined;
+      setMetadata(meta);
+      setCurrentPairings(undefined);
+      bump();
     },
-    [],
+    [bump],
   );
 
   const pairRound = useCallback(() => {
-    dispatch({ type: 'PAIR_ROUND' });
-  }, []);
+    const t = tournamentReference.current;
 
-  const recordResult = useCallback((game: Omit<Game, 'round'>) => {
-    dispatch({ game, type: 'RECORD_RESULT' });
-  }, []);
+    if (!t) {
+      return;
+    }
+
+    const pairings = t.pairRound();
+    setCurrentPairings(pairings);
+    bump();
+  }, [bump]);
+
+  const recordResult = useCallback(
+    (game: Omit<Game, 'round'>) => {
+      const t = tournamentReference.current;
+
+      if (!t) {
+        return;
+      }
+
+      t.recordResult(game);
+      bump();
+    },
+    [bump],
+  );
 
   const saveToFile = useCallback(async (): Promise<boolean> => {
-    if (!state.tournament || !state.metadata) {
+    const t = tournamentReference.current;
+
+    if (!t || !metadata) {
       return false;
     }
 
     const path = await saveTournament(
-      state.tournament,
-      state.metadata,
-      state.players,
-      state.trfSource,
+      t,
+      metadata,
+      players,
+      trfSourceReference.current,
     );
 
     return path !== undefined;
-  }, [state.metadata, state.players, state.tournament, state.trfSource]);
+  }, [metadata, players]);
 
   const loadFromFile = useCallback(async (): Promise<boolean> => {
     const result = await openTournament();
@@ -230,38 +168,38 @@ function TournamentProvider({
       return false;
     }
 
-    dispatch({
-      metadata: result.metadata,
-      players: result.players,
-      tournament: result.tournament,
-      trfSource: result.trfSource,
-      type: 'LOAD_TOURNAMENT',
-    });
+    tournamentReference.current = result.tournament;
+    trfSourceReference.current = result.trfSource;
+    setMetadata(result.metadata);
+    setPlayers(result.players);
+    setCurrentPairings(undefined);
+    bump();
 
     return true;
-  }, []);
+  }, [bump]);
 
-  const standings = useMemo(() => {
-    if (!state.tournament) {
+  const standings = useMemo<Standing[]>(() => {
+    if (!tournament) {
       return [];
     }
 
-    return state.tournament.standings(DEFAULT_TIEBREAKS);
-  }, [state.tournament]);
+    return tournament.standings(DEFAULT_TIEBREAKS);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tournament, version]);
 
-  const round = state.tournament?.currentRound ?? 0;
-  const rounds = state.tournament?.rounds ?? 0;
-  const isComplete = state.tournament?.isComplete ?? false;
+  const round = tournament?.currentRound ?? 0;
+  const rounds = tournament?.rounds ?? 0;
+  const isComplete = tournament?.isComplete ?? false;
 
   const value = useMemo<TournamentContextValue>(
     () => ({
       addPlayer,
-      currentPairings: state.currentPairings,
+      currentPairings,
       isComplete,
       loadFromFile,
-      metadata: state.metadata,
+      metadata,
       pairRound,
-      players: state.players,
+      players,
       recordResult,
       removePlayer,
       round,
@@ -269,14 +207,18 @@ function TournamentProvider({
       saveToFile,
       standings,
       startTournament,
-      tournament: state.tournament,
+      tournament,
       updatePlayer,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       addPlayer,
+      currentPairings,
       isComplete,
       loadFromFile,
+      metadata,
       pairRound,
+      players,
       recordResult,
       removePlayer,
       round,
@@ -284,11 +226,9 @@ function TournamentProvider({
       saveToFile,
       standings,
       startTournament,
-      state.currentPairings,
-      state.metadata,
-      state.players,
-      state.tournament,
+      tournament,
       updatePlayer,
+      version,
     ],
   );
 

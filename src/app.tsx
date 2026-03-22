@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '@/components/error-boundary.js';
 import { HomePage } from '@/components/home/home-page.js';
 import { Sidebar } from '@/components/layout/sidebar.js';
 import { SetupPage } from '@/components/setup/setup-page.js';
@@ -39,11 +40,13 @@ function AppContent(): JSX.Element {
 
 function App(): JSX.Element {
   return (
-    <TournamentProvider>
-      <NavigationProvider>
-        <AppContent />
-      </NavigationProvider>
-    </TournamentProvider>
+    <ErrorBoundary>
+      <TournamentProvider>
+        <NavigationProvider>
+          <AppContent />
+        </NavigationProvider>
+      </TournamentProvider>
+    </ErrorBoundary>
   );
 }
 
