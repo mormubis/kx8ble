@@ -96,6 +96,18 @@ export default typescript.config(
     },
   },
   /**
+   * shadcn/ui generated components — relax strict rules
+   */
+  {
+    files: ['src/components/ui/**/*.tsx'],
+    rules: {
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      'import-x/group-exports': 'off',
+      'react-refresh/only-export-components': 'off',
+      'sort-keys': 'off',
+    },
+  },
+  /**
    * Tests
    */
   {

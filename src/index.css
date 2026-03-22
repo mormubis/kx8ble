@@ -1,1 +1,122 @@
 @import 'tailwindcss';
+
+@theme {
+  /* ── Chess.com Dark Palette ── */
+
+  /* Background layers (darkest → lightest) */
+  --color-bg-tertiary: #21201d;
+  --color-bg-secondary: #272522;
+  --color-bg-primary: #312e2b;
+  --color-bg-elevated: #3c3a36;
+
+  /* Accent (chess.com green) */
+  --color-accent: #81b64c;
+  --color-accent-hover: #9bcb6a;
+  --color-accent-muted: #629924;
+  --color-accent-foreground: #ffffff;
+
+  /* Text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #9e9b98;
+  --color-text-muted: #6b6966;
+
+  /* Borders */
+  --color-border: #3c3a36;
+
+  /* Semantic */
+  --color-success: #81b64c;
+  --color-danger: #e5553a;
+  --color-draw: #9e9b98;
+
+  /* Chess piece accents */
+  --color-white-piece: #f0d9b5;
+  --color-black-piece: #b58863;
+
+  /* ── shadcn/ui semantic tokens (mapped to chess.com palette) ── */
+
+  --color-background: #21201d;
+  --color-foreground: #ffffff;
+
+  --color-card: #272522;
+  --color-card-foreground: #ffffff;
+
+  --color-popover: #272522;
+  --color-popover-foreground: #ffffff;
+
+  --color-primary: #81b64c;
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: #3c3a36;
+  --color-secondary-foreground: #ffffff;
+
+  --color-muted: #312e2b;
+  --color-muted-foreground: #9e9b98;
+
+  --color-destructive: #e5553a;
+  --color-destructive-foreground: #ffffff;
+
+  --color-input: #3c3a36;
+  --color-ring: #81b64c;
+
+  /* Typography */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+}
+
+/* Base styles */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent text selection and drag on UI elements (desktop app feel) */
+*:not(input):not(textarea):not(select) {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Allow text selection in data cells */
+td,
+th {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-md);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
