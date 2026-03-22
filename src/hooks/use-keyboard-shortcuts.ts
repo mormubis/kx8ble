@@ -1,11 +1,9 @@
 import { useEffect } from 'react';
 
-import { useNavigation } from '@/hooks/use-navigation.js';
-import { useTournament } from '@/hooks/use-tournament.js';
+import { useTabs } from '@/hooks/use-tabs.js';
 
 function useKeyboardShortcuts(): void {
-  const { navigate } = useNavigation();
-  const { saveToFile, tournament } = useTournament();
+  const { createTab, navigate, saveToFile, tournament } = useTabs();
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent): void {
@@ -18,6 +16,7 @@ function useKeyboardShortcuts(): void {
       switch (event.key) {
         case 'n': {
           event.preventDefault();
+          createTab();
           navigate('setup');
           break;
         }
@@ -32,6 +31,12 @@ function useKeyboardShortcuts(): void {
           break;
         }
 
+        case 't': {
+          event.preventDefault();
+          createTab();
+          break;
+        }
+
         default: {
           break;
         }
@@ -43,7 +48,7 @@ function useKeyboardShortcuts(): void {
     return () => {
       globalThis.removeEventListener('keydown', handleKeyDown);
     };
-  }, [navigate, saveToFile, tournament]);
+  }, [createTab, navigate, saveToFile, tournament]);
 }
 
 export { useKeyboardShortcuts };

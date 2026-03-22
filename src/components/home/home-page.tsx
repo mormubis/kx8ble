@@ -2,22 +2,16 @@ import { FolderOpen, Plus, Trophy } from 'lucide-react';
 import { useCallback } from 'react';
 
 import { Button } from '@/components/ui/button.js';
-import { useNavigation } from '@/hooks/use-navigation.js';
-import { useTournament } from '@/hooks/use-tournament.js';
+import { useTabs } from '@/hooks/use-tabs.js';
 
 import type { JSX } from 'react';
 
 function HomePage(): JSX.Element {
-  const { navigate } = useNavigation();
-  const { loadFromFile } = useTournament();
+  const { loadFromFile, navigate } = useTabs();
 
   const handleOpen = useCallback(async () => {
-    const loaded = await loadFromFile();
-
-    if (loaded) {
-      navigate('round');
-    }
-  }, [loadFromFile, navigate]);
+    await loadFromFile();
+  }, [loadFromFile]);
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-8">

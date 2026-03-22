@@ -7,7 +7,7 @@ import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import type {
   PlayerEntry,
   TournamentMetadata,
-} from '@/context/tournament-context.js';
+} from '@/context/tabs-context.js';
 
 import type {
   Game,
@@ -20,7 +20,6 @@ import type {
   Player as TrfPlayer,
   Tournament as TrfTournament,
 } from '@echecs/trf';
-
 
 /* ── Result code mapping ── */
 

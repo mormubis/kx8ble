@@ -2,24 +2,27 @@ import { CheckCircle, ChevronRight, Save } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
 
 import { PairingsTable } from '@/components/tournament/pairings-table.js';
+import { RoundSelector } from '@/components/tournament/round-selector.js';
 import { Button } from '@/components/ui/button.js';
-import { useNavigation } from '@/hooks/use-navigation.js';
-import { useTournament } from '@/hooks/use-tournament.js';
+import { useTabs } from '@/hooks/use-tabs.js';
 
 import type { JSX } from 'react';
 
 function RoundView(): JSX.Element {
-  const { navigate } = useNavigation();
   const {
     currentPairings,
     isComplete,
     metadata,
+    navigate,
     pairRound,
     round,
     rounds,
     saveToFile,
     tournament,
-  } = useTournament();
+    viewingRound,
+  } = useTabs();
+
+  const isViewingCurrentRound = viewingRound === round || viewingRound === 0;
 
   const allResultsRecorded = useMemo(() => {
     if (!currentPairings || !tournament) {
@@ -68,9 +71,7 @@ function RoundView(): JSX.Element {
           <h1 className="text-base font-semibold">
             {metadata?.name ?? 'Tournament'}
           </h1>
-          <p className="text-xs text-text-secondary">
-            Round {round} of {rounds}
-          </p>
+          <RoundSelector />
         </div>
 
         <Button onClick={handleSave} size="sm" variant="ghost">
@@ -78,30 +79,31 @@ function RoundView(): JSX.Element {
           Save
         </Button>
 
-        {isComplete ? (
-          <Button
-            onClick={() => {
-              navigate('standings');
-            }}
-            size="sm"
-          >
-            <CheckCircle className="size-4" />
-            Final Standings
-          </Button>
-        ) : needsPairing ? (
-          <Button onClick={handlePairRound} size="sm">
-            Pair Round {round + 1}
-          </Button>
-        ) : allResultsRecorded && !isComplete ? (
-          <Button onClick={handlePairRound} size="sm">
-            Next Round
-            <ChevronRight className="size-4" />
-          </Button>
-        ) : undefined}
+        {isViewingCurrentRound &&
+          (isComplete ? (
+            <Button
+              onClick={() => {
+                navigate('standings');
+              }}
+              size="sm"
+            >
+              <CheckCircle className="size-4" />
+              Final Standings
+            </Button>
+          ) : needsPairing ? (
+            <Button onClick={handlePairRound} size="sm">
+              Pair Round {round + 1}
+            </Button>
+          ) : allResultsRecorded && !isComplete ? (
+            <Button onClick={handlePairRound} size="sm">
+              Next Round
+              <ChevronRight className="size-4" />
+            </Button>
+          ) : undefined)}
       </header>
 
       <div className="flex-1 overflow-auto p-6">
-        {isComplete ? (
+        {isComplete && isViewingCurrentRound ? (
           <div className="flex h-full flex-col items-center justify-center gap-4">
             <CheckCircle className="size-12 text-success" />
             <h2 className="text-lg font-semibold">Tournament Complete</h2>
@@ -117,7 +119,10 @@ function RoundView(): JSX.Element {
             </Button>
           </div>
         ) : (
-          <PairingsTable />
+          <PairingsTable
+            readonly={!isViewingCurrentRound}
+            round={viewingRound || round}
+          />
         )}
       </div>
     </div>

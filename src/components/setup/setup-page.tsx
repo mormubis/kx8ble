@@ -12,14 +12,12 @@ import {
 } from '@/components/ui/card.js';
 import { Input } from '@/components/ui/input.js';
 import { Label } from '@/components/ui/label.js';
-import { useNavigation } from '@/hooks/use-navigation.js';
-import { useTournament } from '@/hooks/use-tournament.js';
+import { useTabs } from '@/hooks/use-tabs.js';
 
 import type { JSX } from 'react';
 
 function SetupPage(): JSX.Element {
-  const { navigate } = useNavigation();
-  const { players, startTournament } = useTournament();
+  const { navigate, players, startTournament } = useTabs();
 
   const [name, setName] = useState('');
   const [rounds, setRounds] = useState(5);

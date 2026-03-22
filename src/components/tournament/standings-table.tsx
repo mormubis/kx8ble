@@ -6,13 +6,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table.js';
-import { useTournament } from '@/hooks/use-tournament.js';
+import { useTabs } from '@/hooks/use-tabs.js';
 import { cn } from '@/lib/utilities.js';
 
 import type { JSX } from 'react';
 
 function StandingsTable(): JSX.Element {
-  const { metadata, players, round, rounds, standings } = useTournament();
+  const { metadata, players, round, rounds, standings } = useTabs();
 
   const playerMap = new Map(players.map((p) => [p.id, p]));
 

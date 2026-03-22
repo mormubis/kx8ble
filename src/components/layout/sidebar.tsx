@@ -1,6 +1,6 @@
 import { Home, ListOrdered, Swords, Trophy } from 'lucide-react';
 
-import { useNavigation } from '@/hooks/use-navigation.js';
+import { useTabs } from '@/hooks/use-tabs.js';
 import { cn } from '@/lib/utilities.js';
 import type { Screen } from '@/types/index.js';
 
@@ -19,7 +19,7 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 function Sidebar(): JSX.Element {
-  const { navigate, screen } = useNavigation();
+  const { navigate, screen } = useTabs();
 
   return (
     <aside className="flex h-full w-14 flex-col border-r border-border bg-bg-tertiary">

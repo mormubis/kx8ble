@@ -7,16 +7,23 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table.js';
-import { useTournament } from '@/hooks/use-tournament.js';
+import { useTabs } from '@/hooks/use-tabs.js';
 
 import type { Result } from '@echecs/tournament';
 import type { JSX } from 'react';
 
-function PairingsTable(): JSX.Element {
-  const { currentPairings, players, recordResult, tournament } =
-    useTournament();
+interface PairingsTableProperties {
+  readonly?: boolean;
+  round: number;
+}
 
-  if (!currentPairings || !tournament) {
+function PairingsTable({
+  readonly: isReadonly = false,
+  round: displayRound,
+}: PairingsTableProperties): JSX.Element {
+  const { currentPairings, players, recordResult, tournament } = useTabs();
+
+  if (!tournament) {
     return (
       <div className="flex h-32 items-center justify-center">
         <p className="text-sm text-text-muted">No pairings yet.</p>
@@ -26,13 +33,29 @@ function PairingsTable(): JSX.Element {
 
   const playerMap = new Map(players.map((p) => [p.id, p.name]));
 
-  const games = tournament.games.filter(
-    (g) => g.round === tournament.currentRound,
-  );
+  const games = tournament.games.filter((g) => g.round === displayRound);
 
   const gameMap = new Map(
     games.map((g) => [`${g.whiteId}-${g.blackId}`, g.result]),
   );
+
+  // For the current round, use currentPairings. For past rounds, reconstruct
+  // from games.
+  const isCurrentRound = displayRound === tournament.currentRound;
+  const pairings = isCurrentRound
+    ? (currentPairings?.pairings ?? [])
+    : // Reconstruct pairings from games for past rounds
+      games.map((g) => ({ blackId: g.blackId, whiteId: g.whiteId }));
+
+  const byes = isCurrentRound ? (currentPairings?.byes ?? []) : [];
+
+  if (pairings.length === 0 && byes.length === 0) {
+    return (
+      <div className="flex h-32 items-center justify-center">
+        <p className="text-sm text-text-muted">No pairings for this round.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-lg border border-border">
@@ -54,7 +77,7 @@ function PairingsTable(): JSX.Element {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentPairings.pairings.map((pairing, index) => {
+          {pairings.map((pairing, index) => {
             const result = gameMap.get(`${pairing.whiteId}-${pairing.blackId}`);
 
             return (
@@ -71,6 +94,7 @@ function PairingsTable(): JSX.Element {
                 </TableCell>
                 <TableCell className="text-center">
                   <ResultCell
+                    disabled={isReadonly}
                     onSelect={(r: Result) => {
                       recordResult({
                         blackId: pairing.blackId,
@@ -89,7 +113,7 @@ function PairingsTable(): JSX.Element {
             );
           })}
 
-          {currentPairings.byes.map((bye) => (
+          {byes.map((bye) => (
             <TableRow
               className="border-border bg-bg-primary/50 hover:bg-bg-elevated"
               key={bye.playerId}

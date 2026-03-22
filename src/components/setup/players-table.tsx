@@ -12,12 +12,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table.js';
-import { useTournament } from '@/hooks/use-tournament.js';
+import { useTabs } from '@/hooks/use-tabs.js';
 
 import type { JSX } from 'react';
 
 function PlayersTable(): JSX.Element {
-  const { addPlayer, players, removePlayer } = useTournament();
+  const { addPlayer, players, removePlayer } = useTabs();
 
   const [name, setName] = useState('');
   const [rating, setRating] = useState('');
