@@ -1,0 +1,51 @@
+{
+  "name": "kx8ble",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "format": "prettier --write \"**/*.+(css|js|json|jsx|md|mjs|mts|ts|tsx|yml|yaml)\"",
+    "format:ci": "prettier -l \"**/*.+(css|js|json|jsx|md|mjs|mts|ts|tsx|yml|yaml)\"",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"*.mjs\" --fix && tsc --noEmit",
+    "lint:ci": "eslint \"src/**/*.{ts,tsx}\" \"*.mjs\" --max-warnings 0 && tsc --noEmit"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2.6.0",
+    "@tauri-apps/plugin-fs": "^2.4.5",
+    "@tauri-apps/plugin-opener": "^2",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.577.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tauri-apps/cli": "^2",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "@vitest/eslint-plugin": "^1.6.13",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import-x": "^4.16.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "eslint-plugin-unicorn": "^63.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.1",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.57.1",
+    "vite": "^7.0.4"
+  }
+}
