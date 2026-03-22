@@ -2,7 +2,7 @@ import { buchholz, dutch } from '@echecs/swiss';
 import { Tournament } from '@echecs/tournament';
 import { createContext, useCallback, useMemo, useReducer } from 'react';
 
-import { loadTournament, saveTournament } from '@/lib/file.js';
+import { openTournament, saveTournament } from '@/lib/file.js';
 
 import type {
   Game,
@@ -11,6 +11,7 @@ import type {
   Standing,
   Tiebreak,
 } from '@echecs/tournament';
+import type { Tournament as TrfTournament } from '@echecs/trf';
 import type { JSX, ReactNode } from 'react';
 
 /* ── State ── */
@@ -25,6 +26,7 @@ interface TournamentState {
   metadata: TournamentMetadata | undefined;
   players: PlayerEntry[];
   tournament: Tournament | undefined;
+  trfSource: TrfTournament | undefined;
 }
 
 /** Extended player with app-local display fields */
@@ -38,24 +40,26 @@ interface PlayerEntry {
 /* ── Actions ── */
 
 type TournamentAction =
-  | { player: PlayerEntry; type: 'ADD_PLAYER' }
-  | { id: string; type: 'REMOVE_PLAYER' }
-  | { player: PlayerEntry; type: 'UPDATE_PLAYER' }
-  | { type: 'START_TOURNAMENT'; metadata: TournamentMetadata; rounds: number }
-  | { type: 'PAIR_ROUND' }
   | { game: Omit<Game, 'round'>; type: 'RECORD_RESULT' }
+  | { id: string; type: 'REMOVE_PLAYER' }
   | {
       metadata: TournamentMetadata;
-      tournament: Tournament;
-      type: 'LOAD_TOURNAMENT';
       players: PlayerEntry[];
-    };
+      tournament: Tournament;
+      trfSource?: TrfTournament;
+      type: 'LOAD_TOURNAMENT';
+    }
+  | { player: PlayerEntry; type: 'ADD_PLAYER' }
+  | { player: PlayerEntry; type: 'UPDATE_PLAYER' }
+  | { type: 'PAIR_ROUND' }
+  | { metadata: TournamentMetadata; rounds: number; type: 'START_TOURNAMENT' };
 
 const INITIAL_STATE: TournamentState = {
   currentPairings: undefined,
   metadata: undefined,
   players: [],
   tournament: undefined,
+  trfSource: undefined,
 };
 
 function reducer(
@@ -70,9 +74,11 @@ function reducer(
     case 'LOAD_TOURNAMENT': {
       return {
         ...state,
+        currentPairings: undefined,
         metadata: action.metadata,
         players: action.players,
         tournament: action.tournament,
+        trfSource: action.trfSource,
       };
     }
 
@@ -120,6 +126,7 @@ function reducer(
         currentPairings: undefined,
         metadata: action.metadata,
         tournament,
+        trfSource: undefined,
       };
     }
 
@@ -210,13 +217,14 @@ function TournamentProvider({
       state.tournament,
       state.metadata,
       state.players,
+      state.trfSource,
     );
 
     return path !== undefined;
-  }, [state.metadata, state.players, state.tournament]);
+  }, [state.metadata, state.players, state.tournament, state.trfSource]);
 
   const loadFromFile = useCallback(async (): Promise<boolean> => {
-    const result = await loadTournament();
+    const result = await openTournament();
 
     if (!result) {
       return false;
@@ -226,6 +234,7 @@ function TournamentProvider({
       metadata: result.metadata,
       players: result.players,
       tournament: result.tournament,
+      trfSource: result.trfSource,
       type: 'LOAD_TOURNAMENT',
     });
 

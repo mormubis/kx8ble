@@ -16,6 +16,7 @@
   "dependencies": {
     "@echecs/swiss": "^0.2.0",
     "@echecs/tournament": "^0.1.1",
+    "@echecs/trf": "^3.1.1",
     "@tailwindcss/vite": "^4.2.2",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-dialog": "^2.6.0",

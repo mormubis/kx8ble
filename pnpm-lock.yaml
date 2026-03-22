@@ -14,6 +14,9 @@ importers:
       '@echecs/tournament':
         specifier: ^0.1.1
         version: 0.1.1
+      '@echecs/trf':
+        specifier: ^3.1.1
+        version: 3.1.1
       '@tailwindcss/vite':
         specifier: ^4.2.2
         version: 4.2.2(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(yaml@2.8.3))
@@ -209,6 +212,10 @@ packages:
 
   '@echecs/tournament@0.1.1':
     resolution: {integrity: sha512-O6vfcnoVTManNCCil5HY6YvPoEt46auJx7oYsOYAWE2fvJ80uGg+a9T/XOYlx6gvdC/tgVSZ9l7YTuFDN9EjhA==}
+    engines: {node: '>=20'}
+
+  '@echecs/trf@3.1.1':
+    resolution: {integrity: sha512-CRlMCMlHoi4w6U3q1Uz3Fi5ZJmMvJjSWicxV+F3mZXcJqzAscQcBmmDYTdiocqNdFXgjV+IOL83/IDThM3eZ9Q==}
     engines: {node: '>=20'}
 
   '@emnapi/core@1.9.1':
@@ -2672,6 +2679,8 @@ snapshots:
   '@echecs/swiss@0.2.0': {}
 
   '@echecs/tournament@0.1.1': {}
+
+  '@echecs/trf@3.1.1': {}
 
   '@emnapi/core@1.9.1':
     dependencies:
