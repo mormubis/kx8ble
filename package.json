@@ -14,8 +14,9 @@
     "lint:ci": "eslint \"src/**/*.{ts,tsx}\" \"*.mjs\" --max-warnings 0 && tsc --noEmit"
   },
   "dependencies": {
-    "@echecs/swiss": "^0.2.0",
-    "@echecs/tournament": "^0.1.1",
+    "@echecs/buchholz": "^3.0.0",
+    "@echecs/swiss": "^3.0.0",
+    "@echecs/tournament": "^2.0.0",
     "@echecs/trf": "^3.1.1",
     "@tailwindcss/vite": "^4.2.2",
     "@tauri-apps/api": "^2",
@@ -24,7 +25,7 @@
     "@tauri-apps/plugin-opener": "^2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.577.0",
+    "lucide-react": "^1.7.0",
     "nanoid": "^5.1.7",
     "radix-ui": "^1.4.3",
     "react": "^19.1.0",
@@ -38,7 +39,7 @@
     "@types/node": "^25.5.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "@vitest/eslint-plugin": "^1.6.13",
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
@@ -50,8 +51,8 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.1",
-    "typescript": "~5.8.3",
-    "typescript-eslint": "^8.57.1",
-    "vite": "^7.0.4"
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.57.2",
+    "vite": "^8.0.3"
   }
 }
