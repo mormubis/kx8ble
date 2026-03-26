@@ -75,7 +75,7 @@ function SetupPage(): JSX.Element {
 
   return (
     <div className="flex h-full items-center justify-center">
-      <Card className="w-full max-w-md border-border bg-bg-secondary">
+      <Card className="w-full max-w-lg">
         <CardHeader>
           <CardTitle>New Tournament</CardTitle>
           <CardDescription className="text-text-secondary">

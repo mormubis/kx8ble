@@ -14,18 +14,18 @@ function HomePage(): JSX.Element {
   }, [loadFromFile]);
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-8">
-      <div className="flex flex-col items-center gap-3">
-        <Trophy className="size-16 text-accent" />
+    <div className="flex h-full flex-col items-center justify-center gap-6">
+      <div className="flex flex-col items-center gap-2">
+        <Trophy className="size-10 text-accent" />
         <h1 className="text-page-title">Kx8ble</h1>
         <p className="text-base text-text-secondary">
           Chess Tournament Manager
         </p>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         <Button
-          className="w-64 gap-2"
+          className="w-56 gap-2"
           onClick={() => {
             navigate('setup');
           }}
@@ -35,7 +35,7 @@ function HomePage(): JSX.Element {
           New Tournament
         </Button>
         <Button
-          className="w-64 gap-2"
+          className="w-56 gap-2"
           onClick={() => {
             void handleOpen();
           }}
@@ -46,6 +46,10 @@ function HomePage(): JSX.Element {
           Open Tournament
         </Button>
       </div>
+
+      <p className="text-xs text-text-muted">
+        {'\u2318'}N new &middot; {'\u2318'}O open &middot; {'\u2318'}S save
+      </p>
     </div>
   );
 }
