@@ -31,9 +31,12 @@ function StandingsTable(): JSX.Element {
 
       <div className="flex-1 overflow-auto p-6">
         {standings.length === 0 ? (
-          <div className="flex h-32 items-center justify-center">
+          <div className="flex h-32 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border">
             <p className="text-sm text-text-muted">
-              No standings yet. Start a tournament first.
+              Standings appear here after the first round is complete.
+            </p>
+            <p className="text-xs text-text-muted">
+              Go to Rounds to pair and record results.
             </p>
           </div>
         ) : (

@@ -139,9 +139,11 @@ function PlayersTable(): JSX.Element {
           </Table>
         </div>
       ) : (
-        <div className="flex h-32 items-center justify-center rounded-lg border border-dashed border-border">
-          <p className="text-sm text-text-muted">
-            No players yet. Add at least 2 players to start.
+        <div className="flex h-32 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border">
+          <p className="text-sm text-text-muted">No players registered yet.</p>
+          <p className="text-xs text-text-muted">
+            Enter a name above and press Enter or click Add. You need at least 2
+            players.
           </p>
         </div>
       )}
