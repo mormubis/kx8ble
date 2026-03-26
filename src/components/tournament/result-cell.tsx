@@ -45,15 +45,15 @@ function ResultCell({
   onSelect,
   value,
 }: ResultCellProperties): JSX.Element {
-  if (value !== undefined) {
-    return (
-      <Badge className={cn('cursor-default text-xs', resultColor(value))}>
-        {resultLabel(value)}
-      </Badge>
-    );
-  }
-
   if (disabled) {
+    if (value !== undefined) {
+      return (
+        <Badge className={cn('cursor-default text-xs', resultColor(value))}>
+          {resultLabel(value)}
+        </Badge>
+      );
+    }
+
     return <span className="text-text-muted">&mdash;</span>;
   }
 
@@ -62,10 +62,13 @@ function ResultCell({
       {RESULT_OPTIONS.map((option, index) => (
         <button
           className={cn(
-            'px-2.5 py-0.5 text-xs font-medium text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary',
+            'px-2.5 py-0.5 text-xs font-medium transition-colors',
             index === 0 && 'rounded-l-md',
             index === RESULT_OPTIONS.length - 1 && 'rounded-r-md',
             index > 0 && 'border-l border-border',
+            value === option.value
+              ? resultColor(option.value)
+              : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary',
           )}
           key={option.value}
           onClick={() => {
