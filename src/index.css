@@ -1,73 +1,99 @@
 @import 'tailwindcss';
 
 @theme {
-  /* ── Chess.com Dark Palette ── */
+  /* ── Kx8ble Color System (OKLCH) ── */
 
-  /* Background layers (darkest → lightest) */
-  --color-bg-tertiary: #21201d;
-  --color-bg-secondary: #272522;
-  --color-bg-primary: #312e2b;
-  --color-bg-elevated: #3c3a36;
-
-  /* Accent (chess.com green) */
-  --color-accent: #81b64c;
-  --color-accent-hover: #9bcb6a;
-  --color-accent-muted: #629924;
-  --color-accent-foreground: #ffffff;
-
-  /* Text */
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #9e9b98;
-  --color-text-muted: #6b6966;
-
-  /* Borders */
-  --color-border: #3c3a36;
+  /* Accent (deep teal) */
+  --color-accent: oklch(55% 0.15 195);
+  --color-accent-hover: oklch(62% 0.15 195);
+  --color-accent-muted: oklch(45% 0.12 195);
+  --color-accent-foreground: oklch(98% 0.005 195);
 
   /* Semantic */
-  --color-success: #81b64c;
-  --color-danger: #e5553a;
-  --color-draw: #9e9b98;
+  --color-success: oklch(62% 0.17 145);
+  --color-danger: oklch(55% 0.2 25);
+  --color-warning: oklch(70% 0.15 75);
+  --color-draw: oklch(65% 0.02 250);
 
   /* Chess piece accents */
-  --color-white-piece: #f0d9b5;
-  --color-black-piece: #b58863;
+  --color-white-piece: oklch(88% 0.04 85);
+  --color-black-piece: oklch(50% 0.08 55);
 
-  /* ── shadcn/ui semantic tokens (mapped to chess.com palette) ── */
+  /* ── Light theme (default) ── */
+  --color-bg-primary: oklch(97% 0.005 250);
+  --color-bg-secondary: oklch(99% 0.002 250);
+  --color-bg-tertiary: oklch(94.5% 0.008 250);
+  --color-bg-elevated: oklch(100% 0 0);
 
-  --color-background: #21201d;
-  --color-foreground: #ffffff;
+  --color-text-primary: oklch(18% 0.01 250);
+  --color-text-secondary: oklch(45% 0.015 250);
+  --color-text-muted: oklch(62% 0.01 250);
 
-  --color-card: #272522;
-  --color-card-foreground: #ffffff;
+  --color-border: oklch(90% 0.008 250);
 
-  --color-popover: #272522;
-  --color-popover-foreground: #ffffff;
+  /* ── shadcn/ui semantic tokens ── */
+  --color-background: oklch(97% 0.005 250);
+  --color-foreground: oklch(18% 0.01 250);
 
-  --color-primary: #81b64c;
-  --color-primary-foreground: #ffffff;
+  --color-card: oklch(99% 0.002 250);
+  --color-card-foreground: oklch(18% 0.01 250);
 
-  --color-secondary: #3c3a36;
-  --color-secondary-foreground: #ffffff;
+  --color-popover: oklch(99% 0.002 250);
+  --color-popover-foreground: oklch(18% 0.01 250);
 
-  --color-muted: #312e2b;
-  --color-muted-foreground: #9e9b98;
+  --color-primary: oklch(55% 0.15 195);
+  --color-primary-foreground: oklch(98% 0.005 195);
 
-  --color-destructive: #e5553a;
-  --color-destructive-foreground: #ffffff;
+  --color-secondary: oklch(94.5% 0.008 250);
+  --color-secondary-foreground: oklch(18% 0.01 250);
 
-  --color-input: #3c3a36;
-  --color-ring: #81b64c;
+  --color-muted: oklch(94.5% 0.008 250);
+  --color-muted-foreground: oklch(45% 0.015 250);
+
+  --color-destructive: oklch(55% 0.2 25);
+  --color-destructive-foreground: oklch(98% 0.005 25);
+
+  --color-input: oklch(90% 0.008 250);
+  --color-ring: oklch(55% 0.15 195);
 
   /* Typography */
-  --font-sans:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Radius */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
   --radius-xl: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg-primary: oklch(20% 0.01 250);
+    --color-bg-secondary: oklch(17% 0.01 250);
+    --color-bg-tertiary: oklch(14% 0.01 250);
+    --color-bg-elevated: oklch(24% 0.01 250);
+
+    --color-text-primary: oklch(93% 0.005 250);
+    --color-text-secondary: oklch(65% 0.01 250);
+    --color-text-muted: oklch(48% 0.01 250);
+
+    --color-border: oklch(26% 0.01 250);
+
+    --color-background: oklch(14% 0.01 250);
+    --color-foreground: oklch(93% 0.005 250);
+    --color-card: oklch(17% 0.01 250);
+    --color-card-foreground: oklch(93% 0.005 250);
+    --color-popover: oklch(17% 0.01 250);
+    --color-popover-foreground: oklch(93% 0.005 250);
+    --color-primary-foreground: oklch(98% 0.005 195);
+    --color-secondary: oklch(24% 0.01 250);
+    --color-secondary-foreground: oklch(93% 0.005 250);
+    --color-muted: oklch(20% 0.01 250);
+    --color-muted-foreground: oklch(65% 0.01 250);
+    --color-destructive-foreground: oklch(98% 0.005 25);
+    --color-input: oklch(26% 0.01 250);
+  }
 }
 
 /* Base styles */
@@ -83,10 +109,11 @@ body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 0.875rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color-scheme: light dark;
 }
 
 /* Prevent text selection and drag on UI elements (desktop app feel) */
