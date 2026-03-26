@@ -52,9 +52,7 @@ function SetupPage(): JSX.Element {
             Back
           </Button>
           <div className="flex-1">
-            <h1 className="text-base font-semibold">
-              {name || 'New Tournament'}
-            </h1>
+            <h1 className="text-section-title">{name || 'New Tournament'}</h1>
             <p className="text-xs text-text-secondary">
               {rounds} rounds &middot; Dutch system
             </p>

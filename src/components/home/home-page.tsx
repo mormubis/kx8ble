@@ -17,8 +17,10 @@ function HomePage(): JSX.Element {
     <div className="flex h-full flex-col items-center justify-center gap-8">
       <div className="flex flex-col items-center gap-3">
         <Trophy className="size-16 text-accent" />
-        <h1 className="text-2xl font-semibold">Kx8ble</h1>
-        <p className="text-sm text-text-secondary">Chess Tournament Manager</p>
+        <h1 className="text-page-title">Kx8ble</h1>
+        <p className="text-base text-text-secondary">
+          Chess Tournament Manager
+        </p>
       </div>
 
       <div className="flex flex-col gap-3">

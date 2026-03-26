@@ -147,3 +147,22 @@ th {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
 }
+
+/* Tabular numbers for aligned data columns */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Type scale utilities */
+.text-page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.text-section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+}

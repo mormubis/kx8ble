@@ -114,11 +114,11 @@ function PlayersTable(): JSX.Element {
                   className="border-border hover:bg-bg-elevated"
                   key={player.id}
                 >
-                  <TableCell className="font-mono text-text-secondary">
+                  <TableCell className="tabular-nums text-text-secondary">
                     {index + 1}
                   </TableCell>
                   <TableCell>{player.name}</TableCell>
-                  <TableCell className="text-right font-mono">
+                  <TableCell className="text-right tabular-nums">
                     {player.rating || '—'}
                   </TableCell>
                   <TableCell>

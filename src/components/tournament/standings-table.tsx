@@ -20,7 +20,7 @@ function StandingsTable(): JSX.Element {
     <div className="flex h-full flex-col">
       <header className="flex items-center gap-4 border-b border-border bg-bg-secondary px-6 py-4">
         <div className="flex-1">
-          <h1 className="text-base font-semibold">
+          <h1 className="text-section-title">
             {metadata?.name ?? 'Standings'}
           </h1>
           <p className="text-xs text-text-secondary">
@@ -70,19 +70,19 @@ function StandingsTable(): JSX.Element {
                       )}
                       key={standing.playerId}
                     >
-                      <TableCell className="text-center font-mono text-text-secondary">
+                      <TableCell className="text-center tabular-nums text-text-secondary">
                         {standing.rank}
                       </TableCell>
                       <TableCell className="font-medium">
                         {player?.name ?? standing.playerId}
                       </TableCell>
-                      <TableCell className="text-right font-mono text-text-secondary">
+                      <TableCell className="text-right tabular-nums text-text-secondary">
                         {player?.rating || '—'}
                       </TableCell>
-                      <TableCell className="text-center font-mono font-semibold">
+                      <TableCell className="text-center tabular-nums font-semibold">
                         {standing.score}
                       </TableCell>
-                      <TableCell className="text-center font-mono text-text-secondary">
+                      <TableCell className="text-center tabular-nums text-text-secondary">
                         {standing.tiebreaks[0]?.toFixed(1) ?? '—'}
                       </TableCell>
                     </TableRow>

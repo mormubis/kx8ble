@@ -85,7 +85,7 @@ function PairingsTable({
                 className="border-border hover:bg-bg-elevated"
                 key={`${pairing.whiteId}-${pairing.blackId}`}
               >
-                <TableCell className="text-center font-mono text-text-secondary">
+                <TableCell className="text-center tabular-nums text-text-secondary">
                   {index + 1}
                 </TableCell>
                 <TableCell>
