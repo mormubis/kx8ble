@@ -33,10 +33,10 @@ function PairingsTable({
 
   const playerMap = new Map(players.map((p) => [p.id, p.name]));
 
-  const games = tournament.games.filter((g) => g.round === displayRound);
+  const games = tournament.games[displayRound - 1] ?? [];
 
   const gameMap = new Map(
-    games.map((g) => [`${g.whiteId}-${g.blackId}`, g.result]),
+    games.map((g) => [`${g.white}-${g.black}`, g.result]),
   );
 
   // For the current round, use currentPairings. For past rounds, reconstruct
@@ -45,7 +45,7 @@ function PairingsTable({
   const pairings = isCurrentRound
     ? (currentPairings?.pairings ?? [])
     : // Reconstruct pairings from games for past rounds
-      games.map((g) => ({ blackId: g.blackId, whiteId: g.whiteId }));
+      games.map((g) => ({ black: g.black, white: g.white }));
 
   const byes = isCurrentRound ? (currentPairings?.byes ?? []) : [];
 
@@ -82,28 +82,28 @@ function PairingsTable({
         </TableHeader>
         <TableBody>
           {pairings.map((pairing, index) => {
-            const result = gameMap.get(`${pairing.whiteId}-${pairing.blackId}`);
+            const result = gameMap.get(`${pairing.white}-${pairing.black}`);
 
             return (
               <TableRow
                 className="border-border hover:bg-bg-elevated"
-                key={`${pairing.whiteId}-${pairing.blackId}`}
+                key={`${pairing.white}-${pairing.black}`}
               >
                 <TableCell className="text-center tabular-nums text-text-secondary">
                   {index + 1}
                 </TableCell>
                 <TableCell>
                   <span className="mr-2 inline-block size-2 rounded-full bg-white-piece" />
-                  {playerMap.get(pairing.whiteId) ?? pairing.whiteId}
+                  {playerMap.get(pairing.white) ?? pairing.white}
                 </TableCell>
                 <TableCell className="text-center">
                   <ResultCell
                     disabled={isReadonly}
                     onSelect={(r: Result) => {
                       recordResult({
-                        blackId: pairing.blackId,
+                        black: pairing.black,
                         result: r,
-                        whiteId: pairing.whiteId,
+                        white: pairing.white,
                       });
                     }}
                     value={result}
@@ -111,7 +111,7 @@ function PairingsTable({
                 </TableCell>
                 <TableCell>
                   <span className="mr-2 inline-block size-2 rounded-full bg-black-piece" />
-                  {playerMap.get(pairing.blackId) ?? pairing.blackId}
+                  {playerMap.get(pairing.black) ?? pairing.black}
                 </TableCell>
               </TableRow>
             );
@@ -120,13 +120,13 @@ function PairingsTable({
           {byes.map((bye) => (
             <TableRow
               className="border-border bg-bg-primary/50 hover:bg-bg-elevated"
-              key={bye.playerId}
+              key={bye.player}
             >
               <TableCell className="text-center font-mono text-text-muted">
                 —
               </TableCell>
               <TableCell className="text-text-secondary">
-                {playerMap.get(bye.playerId) ?? bye.playerId}
+                {playerMap.get(bye.player) ?? bye.player}
               </TableCell>
               <TableCell className="text-center text-xs text-text-muted">
                 BYE

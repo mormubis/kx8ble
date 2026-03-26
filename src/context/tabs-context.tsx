@@ -1,4 +1,5 @@
-import { buchholz, dutch } from '@echecs/swiss';
+import { buchholz } from '@echecs/buchholz';
+import { pair as dutch } from '@echecs/swiss';
 import { Tournament } from '@echecs/tournament';
 import { nanoid } from 'nanoid';
 import { createContext, useCallback, useMemo, useRef, useState } from 'react';
@@ -68,7 +69,7 @@ interface TabsContextValue {
   metadata: TournamentMetadata | undefined;
   pairRound: () => void;
   players: PlayerEntry[];
-  recordResult: (game: Omit<Game, 'round'>) => void;
+  recordResult: (game: Game) => void;
   removePlayer: (id: string) => void;
   round: number;
   rounds: number;
@@ -273,7 +274,7 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
   }, [activeTabId, bump, getReferences, updateActiveTab]);
 
   const recordResult = useCallback(
-    (game: Omit<Game, 'round'>) => {
+    (game: Game) => {
       const references = getReferences(activeTabId);
       const t = references.tournament;
 
@@ -372,9 +373,7 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
       return false;
     }
 
-    const roundGames = tournament.games.filter(
-      (g) => g.round === tournament.currentRound,
-    );
+    const roundGames = tournament.games[tournament.currentRound - 1] ?? [];
 
     return roundGames.length === pairings.pairings.length;
     // eslint-disable-next-line react-hooks/exhaustive-deps

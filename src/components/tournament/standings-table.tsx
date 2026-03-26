@@ -63,7 +63,7 @@ function StandingsTable(): JSX.Element {
               </TableHeader>
               <TableBody>
                 {standings.map((standing) => {
-                  const player = playerMap.get(standing.playerId);
+                  const player = playerMap.get(standing.player);
 
                   return (
                     <TableRow
@@ -71,13 +71,13 @@ function StandingsTable(): JSX.Element {
                         'border-border hover:bg-bg-elevated',
                         standing.rank === 1 && 'border-l-2 border-l-accent',
                       )}
-                      key={standing.playerId}
+                      key={standing.player}
                     >
                       <TableCell className="text-center tabular-nums text-text-secondary">
                         {standing.rank}
                       </TableCell>
                       <TableCell className="font-medium">
-                        {player?.name ?? standing.playerId}
+                        {player?.name ?? standing.player}
                       </TableCell>
                       <TableCell className="text-right tabular-nums text-text-secondary">
                         {player?.rating || '—'}

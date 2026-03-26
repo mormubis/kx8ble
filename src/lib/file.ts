@@ -1,4 +1,4 @@
-import { dutch } from '@echecs/swiss';
+import { pair as dutch } from '@echecs/swiss';
 import { Tournament } from '@echecs/tournament';
 import { parse, stringify } from '@echecs/trf';
 import { open, save } from '@tauri-apps/plugin-dialog';
@@ -86,8 +86,8 @@ function trfToPlayers(trfPlayers: TrfPlayer[]): PlayerEntry[] {
   }));
 }
 
-function trfToGames(trfPlayers: TrfPlayer[]): Game[] {
-  const games: Game[] = [];
+function trfToGames(trfPlayers: TrfPlayer[]): Game[][] {
+  const roundMap = new Map<number, Game[]>();
 
   for (const player of trfPlayers) {
     for (const result of player.results) {
@@ -101,13 +101,27 @@ function trfToGames(trfPlayers: TrfPlayer[]): Game[] {
         continue;
       }
 
-      games.push({
-        blackId: String(result.opponentId),
+      const game: Game = {
+        black: String(result.opponentId),
         result: resultCodeToNumeric(result.result, 'w'),
-        round: result.round,
-        whiteId: String(player.pairingNumber),
-      });
+        white: String(player.pairingNumber),
+      };
+
+      const roundGames = roundMap.get(result.round) ?? [];
+      roundGames.push(game);
+      roundMap.set(result.round, roundGames);
     }
+  }
+
+  if (roundMap.size === 0) {
+    return [];
+  }
+
+  const maxRound = Math.max(...roundMap.keys());
+  const games: Game[][] = [];
+
+  for (let r = 1; r <= maxRound; r++) {
+    games.push(roundMap.get(r) ?? []);
   }
 
   return games;
@@ -132,7 +146,7 @@ function trfToRoundPairings(
       }
 
       if (result.opponentId === null) {
-        byes.push({ playerId: String(player.pairingNumber) });
+        byes.push({ player: String(player.pairingNumber) });
         continue;
       }
 
@@ -149,13 +163,13 @@ function trfToRoundPairings(
 
       if (result.color === 'w') {
         pairings.push({
-          blackId: String(result.opponentId),
-          whiteId: String(player.pairingNumber),
+          black: String(result.opponentId),
+          white: String(player.pairingNumber),
         });
       } else {
         pairings.push({
-          blackId: String(player.pairingNumber),
-          whiteId: String(result.opponentId),
+          black: String(player.pairingNumber),
+          white: String(result.opponentId),
         });
       }
     }
@@ -194,36 +208,44 @@ function appToTrf(
   players: PlayerEntry[],
   trfSource?: TrfTournament,
 ): TrfTournament {
-  const games = tournament.games;
+  const allRoundGames = tournament.games;
 
   const trfPlayers: TrfPlayer[] = players.map((p, index) => {
     const pairingNumber = index + 1;
-    const playerGames = games.filter(
-      (g) => g.whiteId === p.id || g.blackId === p.id,
-    );
 
-    const results: RoundResult[] = playerGames.map((g) => {
-      const isWhite = g.whiteId === p.id;
-      const opponentId = isWhite ? g.blackId : g.whiteId;
-      const opponentPlayer = players.findIndex((op) => op.id === opponentId);
-      const result = isWhite
-        ? g.result
-        : g.result === 1
-          ? 0
-          : g.result === 0
-            ? 1
-            : 0.5;
+    const results: RoundResult[] = [];
 
-      return {
-        color: (isWhite ? 'w' : 'b') as 'b' | 'w',
-        opponentId: opponentPlayer + 1,
-        result: numericToResultCode(result as 0 | 0.5 | 1),
-        round: g.round,
-      };
-    });
+    for (const [roundIndex, allRoundGame] of allRoundGames.entries()) {
+      const roundNumber = roundIndex + 1;
+      const roundGames = allRoundGame ?? [];
+
+      for (const g of roundGames) {
+        if (g.white !== p.id && g.black !== p.id) {
+          continue;
+        }
+
+        const isWhite = g.white === p.id;
+        const opponentId = isWhite ? g.black : g.white;
+        const opponentPlayer = players.findIndex((op) => op.id === opponentId);
+        const result = isWhite
+          ? g.result
+          : g.result === 1
+            ? 0
+            : g.result === 0
+              ? 1
+              : 0.5;
+
+        results.push({
+          color: (isWhite ? 'w' : 'b') as 'b' | 'w',
+          opponentId: opponentPlayer + 1,
+          result: numericToResultCode(result as 0 | 0.5 | 1),
+          round: roundNumber,
+        });
+      }
+    }
 
     const standings = tournament.standings();
-    const standing = standings.find((s) => s.playerId === p.id);
+    const standing = standings.find((s) => s.player === p.id);
 
     return {
       federation: p.federation || undefined,
