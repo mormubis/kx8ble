@@ -51,8 +51,12 @@ function PairingsTable({
 
   if (pairings.length === 0 && byes.length === 0) {
     return (
-      <div className="flex h-32 items-center justify-center">
-        <p className="text-sm text-text-muted">No pairings for this round.</p>
+      <div className="flex h-32 items-center justify-center rounded-lg border border-dashed border-border">
+        <p className="text-sm text-text-muted">
+          Round not yet paired. Click{' '}
+          <strong className="text-text-secondary">Pair Round</strong> in the
+          header to generate pairings.
+        </p>
       </div>
     );
   }

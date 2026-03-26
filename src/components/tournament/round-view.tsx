@@ -1,4 +1,10 @@
-import { CheckCircle, ChevronRight, Save } from 'lucide-react';
+import {
+  CheckCircle,
+  ChevronRight,
+  FolderOpen,
+  Plus,
+  Save,
+} from 'lucide-react';
 import { useCallback, useMemo } from 'react';
 
 import { PairingsTable } from '@/components/tournament/pairings-table.js';
@@ -12,6 +18,7 @@ function RoundView(): JSX.Element {
   const {
     currentPairings,
     isComplete,
+    loadFromFile,
     metadata,
     navigate,
     pairRound,
@@ -50,15 +57,30 @@ function RoundView(): JSX.Element {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <p className="text-text-secondary">No tournament in progress.</p>
-          <Button
-            onClick={() => {
-              navigate('home');
-            }}
-            variant="secondary"
-          >
-            Go Home
-          </Button>
+          <p className="text-sm text-text-secondary">
+            No active tournament. Create one to get started.
+          </p>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                navigate('setup');
+              }}
+              size="sm"
+            >
+              <Plus className="size-4" />
+              New Tournament
+            </Button>
+            <Button
+              onClick={() => {
+                void loadFromFile();
+              }}
+              size="sm"
+              variant="secondary"
+            >
+              <FolderOpen className="size-4" />
+              Open File
+            </Button>
+          </div>
         </div>
       </div>
     );

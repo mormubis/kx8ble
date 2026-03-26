@@ -1,10 +1,4 @@
 import { Badge } from '@/components/ui/badge.js';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu.js';
 import { cn } from '@/lib/utilities.js';
 
 import type { Result } from '@echecs/tournament';
@@ -64,29 +58,25 @@ function ResultCell({
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <div className="inline-flex rounded-md border border-border">
+      {RESULT_OPTIONS.map((option, index) => (
         <button
-          className="rounded-md border border-dashed border-border px-3 py-0.5 text-xs text-text-muted transition-colors hover:border-accent hover:text-text-secondary"
+          className={cn(
+            'px-2.5 py-0.5 text-xs font-medium text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary',
+            index === 0 && 'rounded-l-md',
+            index === RESULT_OPTIONS.length - 1 && 'rounded-r-md',
+            index > 0 && 'border-l border-border',
+          )}
+          key={option.value}
+          onClick={() => {
+            onSelect(option.value);
+          }}
           type="button"
         >
-          Result
+          {option.label}
         </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="border-border bg-bg-secondary">
-        {RESULT_OPTIONS.map((option) => (
-          <DropdownMenuItem
-            className="cursor-pointer text-text-primary hover:bg-bg-elevated focus:bg-bg-elevated"
-            key={option.value}
-            onClick={() => {
-              onSelect(option.value);
-            }}
-          >
-            {option.label}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      ))}
+    </div>
   );
 }
 
