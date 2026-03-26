@@ -61,6 +61,7 @@ interface TabsContextValue {
 
   /* Tournament (active tab) */
   addPlayer: (player: PlayerEntry) => void;
+  allResultsRecorded: boolean;
   currentPairings: PairingResult | undefined;
   isComplete: boolean;
   loadFromFile: () => Promise<boolean>;
@@ -324,13 +325,20 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
     references.tournament = result.tournament;
     references.trfSource = result.trfSource;
 
+    // Restore currentPairings from the loaded tournament's current round
+    const snapshot = result.tournament.toJSON();
+    const currentRoundPairings =
+      snapshot.roundPairings[String(snapshot.currentRound)];
+
     setTabs((previous) => [
       ...previous,
       {
         ...tab,
+        currentPairings: currentRoundPairings,
         metadata: result.metadata,
         players: result.players,
         screen: 'round' as Screen,
+        viewingRound: snapshot.currentRound,
       },
     ]);
     setActiveTabId(tab.id);
@@ -357,10 +365,26 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
   const rounds = tournament?.rounds ?? 0;
   const isComplete = tournament?.isComplete ?? false;
 
+  const allResultsRecorded = useMemo(() => {
+    const pairings = activeTab?.currentPairings;
+
+    if (!pairings || !tournament) {
+      return false;
+    }
+
+    const roundGames = tournament.games.filter(
+      (g) => g.round === tournament.currentRound,
+    );
+
+    return roundGames.length === pairings.pairings.length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab?.currentPairings, tournament, version]);
+
   const value = useMemo<TabsContextValue>(
     () => ({
       activeTab,
       addPlayer,
+      allResultsRecorded,
       closeTab,
       createTab,
       currentPairings: activeTab?.currentPairings,
@@ -389,6 +413,7 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
     [
       activeTab,
       addPlayer,
+      allResultsRecorded,
       closeTab,
       createTab,
       isComplete,

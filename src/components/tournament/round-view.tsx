@@ -5,7 +5,7 @@ import {
   Plus,
   Save,
 } from 'lucide-react';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import { PairingsTable } from '@/components/tournament/pairings-table.js';
 import { RoundSelector } from '@/components/tournament/round-selector.js';
@@ -16,6 +16,7 @@ import type { JSX } from 'react';
 
 function RoundView(): JSX.Element {
   const {
+    allResultsRecorded,
     currentPairings,
     isComplete,
     loadFromFile,
@@ -30,18 +31,6 @@ function RoundView(): JSX.Element {
   } = useTabs();
 
   const isViewingCurrentRound = viewingRound === round || viewingRound === 0;
-
-  const allResultsRecorded = useMemo(() => {
-    if (!currentPairings || !tournament) {
-      return false;
-    }
-
-    const roundGames = tournament.games.filter(
-      (g) => g.round === tournament.currentRound,
-    );
-
-    return roundGames.length === currentPairings.pairings.length;
-  }, [currentPairings, tournament]);
 
   const needsPairing = !currentPairings && !isComplete;
 

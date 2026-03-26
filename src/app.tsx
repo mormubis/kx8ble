@@ -21,12 +21,15 @@ const SCREENS: Record<Screen, () => JSX.Element> = {
 };
 
 function AppContent(): JSX.Element {
-  const { screen } = useTabs();
+  const { screen, tournament } = useTabs();
   const CurrentScreen = SCREENS[screen];
 
   useKeyboardShortcuts();
 
-  const showSidebar = screen !== 'home' && screen !== 'setup';
+  // Show sidebar when inside a tournament (even on home/setup screens),
+  // so the user can always navigate back to rounds/standings.
+  const showSidebar =
+    tournament !== undefined && screen !== 'setup' && screen !== 'players';
 
   return (
     <div className="flex h-full flex-col">
