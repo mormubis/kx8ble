@@ -280,18 +280,29 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
         return;
       }
 
-      // Guard: the library appends games instead of replacing, so skip if
-      // a result already exists for this pairing in the current round.
+      // The library appends games instead of replacing. If a result already
+      // exists for this pairing, reconstruct the tournament with the updated
+      // result to avoid duplicates.
       const currentRoundGames = t.games[t.currentRound - 1] ?? [];
       const alreadyRecorded = currentRoundGames.some(
         (g) => g.white === game.white && g.black === game.black,
       );
 
       if (alreadyRecorded) {
-        return;
+        const snapshot = t.toJSON();
+        const roundIndex = t.currentRound - 1;
+
+        snapshot.games[roundIndex] = snapshot.games[roundIndex].map((g) =>
+          g.white === game.white && g.black === game.black
+            ? { ...g, result: game.result }
+            : g,
+        );
+
+        references.tournament = Tournament.fromJSON(snapshot, dutch);
+      } else {
+        t.recordResult(game);
       }
 
-      t.recordResult(game);
       bump();
     },
     [activeTabId, bump, getReferences],
