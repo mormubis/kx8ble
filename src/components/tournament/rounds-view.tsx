@@ -293,7 +293,7 @@ function RoundsView(): JSX.Element {
           </Button>
         )}
 
-        {isViewingCurrent && allResultsRecorded && !isComplete && (
+        {allResultsRecorded && !isComplete && (
           <Button onClick={handlePairRound} size="sm">
             Next Round
             <ChevronRight className="size-4" />
