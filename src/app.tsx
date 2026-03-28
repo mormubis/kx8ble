@@ -1,8 +1,9 @@
 import { ErrorBoundary } from '@/components/error-boundary.js';
 import { RootLayout } from '@/components/layout/root-layout.js';
-import { SetupPage } from '@/components/setup/setup-page.js';
-import { RoundView } from '@/components/tournament/round-view.js';
+import { PlayerManagement } from '@/components/tournament/player-management.js';
+import { RoundsView } from '@/components/tournament/rounds-view.js';
 import { StandingsView } from '@/components/tournament/standings-view.js';
+import { TournamentSetup } from '@/components/tournament/tournament-setup.js';
 import { TabsProvider } from '@/context/tabs-context.js';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts.js';
 import { useTabs } from '@/hooks/use-tabs.js';
@@ -11,10 +12,10 @@ import type { Screen } from '@/types/index.js';
 import type { JSX } from 'react';
 
 const SCREENS: Record<Screen, () => JSX.Element> = {
-  home: SetupPage,
-  players: SetupPage,
-  round: RoundView,
-  setup: SetupPage,
+  home: TournamentSetup,
+  players: PlayerManagement,
+  round: RoundsView,
+  setup: TournamentSetup,
   standings: StandingsView,
 };
 
