@@ -280,6 +280,17 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
         return;
       }
 
+      // Guard: the library appends games instead of replacing, so skip if
+      // a result already exists for this pairing in the current round.
+      const currentRoundGames = t.games[t.currentRound - 1] ?? [];
+      const alreadyRecorded = currentRoundGames.some(
+        (g) => g.white === game.white && g.black === game.black,
+      );
+
+      if (alreadyRecorded) {
+        return;
+      }
+
       t.recordResult(game);
       bump();
     },

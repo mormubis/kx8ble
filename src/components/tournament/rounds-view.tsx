@@ -430,7 +430,11 @@ function RoundsView(): JSX.Element {
                               </SelectValue>
                             </SelectTrigger>
                             <SelectContent>
-                              {RESULT_OPTIONS.map((option) => (
+                              {RESULT_OPTIONS.filter(
+                                (option) =>
+                                  option.value !== 'none' ||
+                                  currentKey === 'none',
+                              ).map((option) => (
                                 <SelectItem
                                   className={
                                     option.value === 'none'
