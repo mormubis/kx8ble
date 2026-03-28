@@ -3,7 +3,15 @@ import { useEffect } from 'react';
 import { useTabs } from '@/hooks/use-tabs.js';
 
 function useKeyboardShortcuts(): void {
-  const { createTab, navigate, saveToFile, tournament } = useTabs();
+  const {
+    activeTab,
+    closeTab,
+    createTab,
+    loadFromFile,
+    navigate,
+    saveToFile,
+    tournament,
+  } = useTabs();
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent): void {
@@ -21,6 +29,12 @@ function useKeyboardShortcuts(): void {
           break;
         }
 
+        case 'o': {
+          event.preventDefault();
+          void loadFromFile();
+          break;
+        }
+
         case 's': {
           event.preventDefault();
 
@@ -31,9 +45,14 @@ function useKeyboardShortcuts(): void {
           break;
         }
 
-        case 't': {
+        case 'w': {
           event.preventDefault();
-          createTab();
+
+          if (activeTab) {
+            // TODO: check for unsaved changes and confirm before closing
+            closeTab(activeTab.id);
+          }
+
           break;
         }
 
@@ -48,7 +67,15 @@ function useKeyboardShortcuts(): void {
     return () => {
       globalThis.removeEventListener('keydown', handleKeyDown);
     };
-  }, [createTab, navigate, saveToFile, tournament]);
+  }, [
+    activeTab,
+    closeTab,
+    createTab,
+    loadFromFile,
+    navigate,
+    saveToFile,
+    tournament,
+  ]);
 }
 
 export { useKeyboardShortcuts };
