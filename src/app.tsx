@@ -2,7 +2,7 @@ import { ErrorBoundary } from '@/components/error-boundary.js';
 import { RootLayout } from '@/components/layout/root-layout.js';
 import { SetupPage } from '@/components/setup/setup-page.js';
 import { RoundView } from '@/components/tournament/round-view.js';
-import { StandingsTable } from '@/components/tournament/standings-table.js';
+import { StandingsView } from '@/components/tournament/standings-view.js';
 import { TabsProvider } from '@/context/tabs-context.js';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts.js';
 import { useTabs } from '@/hooks/use-tabs.js';
@@ -15,7 +15,7 @@ const SCREENS: Record<Screen, () => JSX.Element> = {
   players: SetupPage,
   round: RoundView,
   setup: SetupPage,
-  standings: StandingsTable,
+  standings: StandingsView,
 };
 
 function AppContent(): JSX.Element {
