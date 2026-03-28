@@ -51,75 +51,78 @@ function RootLayout({ children }: RootLayoutProperties): JSX.Element {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header bar */}
-      <header className="flex h-14 shrink-0 items-center justify-between border-b border-border px-4">
-        <div className="flex items-center gap-3">
-          <span className="font-semibold text-text-primary">Kx8ble</span>
-          <Button onClick={handleNewTournament} size="sm">
-            <Plus className="size-4" />
-            New Tournament
-          </Button>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={() => {
-              void loadFromFile();
-            }}
-            size="sm"
-            variant="secondary"
-          >
-            <FolderOpen className="size-4" />
-            Open
-          </Button>
-        </div>
-      </header>
+      {/* Tab bar — brand + tournament tabs + actions */}
+      <header className="flex h-10 shrink-0 items-center gap-2 border-b border-border px-3">
+        <span className="mr-1 text-sm font-semibold text-text-primary">
+          Kx8ble
+        </span>
 
-      {/* Tournament tabs row */}
-      {tabs.length > 0 && (
-        <div className="flex h-10 shrink-0 items-center gap-1 overflow-x-auto border-b border-border px-2">
-          {tabs.map((tab) => (
-            <button
+        {/* Tournament tabs */}
+        {tabs.map((tab) => (
+          <button
+            className={cn(
+              'group relative flex shrink-0 items-center gap-1 rounded-md px-3 py-1 text-sm font-medium transition-colors',
+              tab.id === activeTab?.id
+                ? 'bg-primary text-primary-foreground'
+                : 'text-text-secondary hover:bg-bg-secondary hover:text-text-primary',
+            )}
+            key={tab.id}
+            onClick={() => {
+              selectTab(tab.id);
+            }}
+            type="button"
+          >
+            <span className="max-w-40 truncate">
+              {tab.metadata?.name ?? 'Untitled'}
+            </span>
+            <span
               className={cn(
-                'group relative flex shrink-0 items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+                'ml-1 flex size-4 shrink-0 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100',
                 tab.id === activeTab?.id
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-text-secondary hover:bg-bg-secondary hover:text-text-primary',
+                  ? 'hover:bg-primary-foreground/20'
+                  : 'hover:bg-bg-elevated',
               )}
-              key={tab.id}
-              onClick={() => {
-                selectTab(tab.id);
+              onClick={(event) => {
+                event.stopPropagation();
+                closeTab(tab.id);
               }}
-              type="button"
-            >
-              <span className="max-w-40 truncate">
-                {tab.metadata?.name ?? 'New Tournament'}
-              </span>
-              <span
-                className={cn(
-                  'ml-1 flex size-4 shrink-0 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100',
-                  tab.id === activeTab?.id
-                    ? 'hover:bg-primary-foreground/20'
-                    : 'hover:bg-bg-elevated',
-                )}
-                onClick={(event) => {
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
                   event.stopPropagation();
                   closeTab(tab.id);
-                }}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.stopPropagation();
-                    closeTab(tab.id);
-                  }
-                }}
-              >
-                <X className="size-3" />
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
+                }
+              }}
+              role="button"
+              tabIndex={0}
+            >
+              <X className="size-3" />
+            </span>
+          </button>
+        ))}
+
+        {/* Tab actions */}
+        <Button
+          className="size-7"
+          onClick={handleNewTournament}
+          size="icon"
+          variant="ghost"
+        >
+          <Plus className="size-4" />
+        </Button>
+
+        <div className="flex-1" />
+
+        <Button
+          onClick={() => {
+            void loadFromFile();
+          }}
+          size="sm"
+          variant="ghost"
+        >
+          <FolderOpen className="size-4" />
+          Open
+        </Button>
+      </header>
 
       {/* Navigation bar — show when any tab is active */}
       {activeTab !== undefined && (
