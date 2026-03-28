@@ -42,7 +42,6 @@ function RootLayout({ children }: RootLayoutProperties): JSX.Element {
     screen,
     selectTab,
     tabs,
-    tournament,
   } = useTabs();
 
   function handleNewTournament() {
@@ -122,8 +121,8 @@ function RootLayout({ children }: RootLayoutProperties): JSX.Element {
         </div>
       )}
 
-      {/* Navigation bar */}
-      {tournament !== undefined && (
+      {/* Navigation bar — show when any tab is active */}
+      {activeTab !== undefined && (
         <nav className="flex h-10 shrink-0 items-center gap-1 border-b border-border px-4">
           {NAV_ITEMS.map((item) => (
             <Button
