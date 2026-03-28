@@ -157,10 +157,8 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
         const next = previous.filter((t) => t.id !== id);
 
         if (next.length === 0) {
-          const fresh = makeTab();
-          getReferences(fresh.id);
-          setActiveTabId(fresh.id);
-          return [fresh];
+          setActiveTabId('');
+          return [];
         }
 
         if (id === activeTabId) {
