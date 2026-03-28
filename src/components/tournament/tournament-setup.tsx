@@ -228,7 +228,7 @@ function TournamentSetup(): JSX.Element {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="dutch">Dutch (FIDE C.04.3)</SelectItem>
+                  <SelectItem value="dutch">Dutch</SelectItem>
                   <SelectItem value="dubov">Dubov</SelectItem>
                   <SelectItem value="burstein">Burstein</SelectItem>
                   <SelectItem value="lim">Lim</SelectItem>
