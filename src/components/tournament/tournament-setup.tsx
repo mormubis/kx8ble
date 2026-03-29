@@ -1,5 +1,8 @@
+import { ChevronDown, ChevronUp, Plus, X } from 'lucide-react';
 import { useState } from 'react';
 
+
+import { Button } from '@/components/ui/button.js';
 import {
   Card,
   CardContent,
@@ -15,7 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select.js';
+import { Separator } from '@/components/ui/separator.js';
 import { useTabs } from '@/hooks/use-tabs.js';
+import { TIEBREAK_REGISTRY } from '@/lib/tiebreaks.js';
 import type {
   PairingSystemId,
   TimeControlType,
@@ -25,7 +30,11 @@ import type {
 import type { JSX } from 'react';
 
 function TournamentSetup(): JSX.Element {
-  const { metadata, players, round, rounds } = useTabs();
+  const { addTiebreak, metadata, players, removeTiebreak, reorderTiebreak, round, rounds, selectedTiebreaks } = useTabs();
+
+  const availableTiebreaks = TIEBREAK_REGISTRY.filter(
+    (t) => !selectedTiebreaks.includes(t.id),
+  );
 
   // ── Local state for fields not yet backed by context (wired in Task 9) ──
 
@@ -237,6 +246,96 @@ function TournamentSetup(): JSX.Element {
                 </SelectContent>
               </Select>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── Tiebreaks ── */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Tiebreaks</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Available tiebreaks */}
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-text-secondary">Available</p>
+            {availableTiebreaks.length === 0 ? (
+              <p className="text-sm text-text-muted">All tiebreak systems selected.</p>
+            ) : (
+              <div className="space-y-1">
+                {availableTiebreaks.map((tb) => (
+                  <button
+                    key={tb.id}
+                    type="button"
+                    onClick={() => addTiebreak(tb.id)}
+                    className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors hover:bg-bg-elevated"
+                  >
+                    <Plus className="size-4 shrink-0 text-text-muted" />
+                    <span className="font-medium">{tb.name}</span>
+                    <span className="text-text-muted">— {tb.description}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <Separator />
+
+          {/* Selected tiebreaks */}
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-text-secondary">
+              Selected (in priority order)
+            </p>
+            {selectedTiebreaks.length === 0 ? (
+              <p className="text-sm text-text-muted">No tiebreaks selected.</p>
+            ) : (
+              <div className="space-y-1">
+                {selectedTiebreaks.map((id, index) => {
+                  const tiebreak = TIEBREAK_REGISTRY.find((t) => t.id === id);
+                  if (!tiebreak) return;
+                  return (
+                    <div
+                      key={id}
+                      className="flex items-center gap-2 rounded-md border border-border px-3 py-1.5"
+                    >
+                      <span className="w-6 text-center text-xs tabular-nums text-text-muted">
+                        {index + 1}
+                      </span>
+                      <span className="flex-1 text-sm font-medium">
+                        {tiebreak.name}
+                        <span className="ml-1 text-text-muted">({tiebreak.abbr})</span>
+                      </span>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="size-7"
+                        disabled={index === 0}
+                        onClick={() => reorderTiebreak(id, 'up')}
+                      >
+                        <ChevronUp className="size-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="size-7"
+                        disabled={index === selectedTiebreaks.length - 1}
+                        onClick={() => reorderTiebreak(id, 'down')}
+                      >
+                        <ChevronDown className="size-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="size-7"
+                        onClick={() => removeTiebreak(id)}
+                      >
+                        <X className="size-4" />
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
