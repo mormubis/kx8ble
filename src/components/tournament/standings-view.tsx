@@ -10,6 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table.js';
 import { useTabs } from '@/hooks/use-tabs.js';
+import { getTiebreakById } from '@/lib/tiebreaks.js';
 import { cn } from '@/lib/utilities.js';
 
 import type { Game } from '@echecs/tournament';
@@ -82,7 +83,7 @@ function resultColor(result: RoundResult): string {
 const TITLE_PREFIXES = ['GM', 'IM', 'FM', 'WGM', 'WIM', 'WFM', 'CM', 'WCM'];
 
 function StandingsView(): JSX.Element {
-  const { metadata, players, round, rounds, standings, tournament } = useTabs();
+  const { metadata, players, round, rounds, selectedTiebreaks, standings, tournament } = useTabs();
 
   /* ── Derived data ── */
 
@@ -205,6 +206,17 @@ function StandingsView(): JSX.Element {
                 <TableHead className="w-20 text-center text-xs uppercase text-text-secondary">
                   Points
                 </TableHead>
+                {selectedTiebreaks.map((id) => {
+                  const tiebreakDefinition = getTiebreakById(id);
+                  return (
+                    <TableHead
+                      key={id}
+                      className="w-16 text-center text-xs uppercase text-text-secondary"
+                    >
+                      {tiebreakDefinition?.abbr ?? id}
+                    </TableHead>
+                  );
+                })}
                 {Array.from({ length: roundsPlayed }, (_, index) => (
                   <TableHead
                     className="w-10 text-center text-xs uppercase text-text-secondary"
@@ -279,6 +291,16 @@ function StandingsView(): JSX.Element {
                     <TableCell className="text-center tabular-nums text-lg font-semibold">
                       {standing.score}
                     </TableCell>
+
+                    {/* Tiebreak values */}
+                    {standing.tiebreaks.map((value, tiebreakIndex) => (
+                      <TableCell
+                        key={`tb-${tiebreakIndex}`}
+                        className="text-center tabular-nums text-text-secondary"
+                      >
+                        {Number.isInteger(value) ? value : value.toFixed(1)}
+                      </TableCell>
+                    ))}
 
                     {/* Per-round results */}
                     {Array.from({ length: roundsPlayed }, (_, rIndex) => {
