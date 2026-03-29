@@ -18,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select.js';
-import { Separator } from '@/components/ui/separator.js';
 import { useTabs } from '@/hooks/use-tabs.js';
 import { TIEBREAK_REGISTRY } from '@/lib/tiebreaks.js';
 import type {
@@ -56,8 +55,10 @@ function TournamentSetup(): JSX.Element {
   const [nationallyRated, setNationallyRated] = useState<'yes' | 'no'>('no');
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
+    <div className="p-6 max-w-6xl mx-auto space-y-6">
       <h2 className="text-section-title text-text-primary">Tournament Setup</h2>
+
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
 
       {/* ── Basic Information ── */}
       <Card>
@@ -250,12 +251,15 @@ function TournamentSetup(): JSX.Element {
         </CardContent>
       </Card>
 
+      </div>
+
       {/* ── Tiebreaks ── */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Tiebreaks</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent>
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           {/* Available tiebreaks */}
           <div className="space-y-1">
             <p className="text-sm font-medium text-text-secondary">Available</p>
@@ -278,8 +282,6 @@ function TournamentSetup(): JSX.Element {
               </div>
             )}
           </div>
-
-          <Separator />
 
           {/* Selected tiebreaks */}
           <div className="space-y-1">
@@ -337,8 +339,11 @@ function TournamentSetup(): JSX.Element {
               </div>
             )}
           </div>
+          </div>
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
 
       {/* ── Officials & Rating ── */}
       <Card>
@@ -442,6 +447,8 @@ function TournamentSetup(): JSX.Element {
           </div>
         </CardContent>
       </Card>
+
+      </div>
     </div>
   );
 }
