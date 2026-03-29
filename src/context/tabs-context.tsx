@@ -1,10 +1,10 @@
-import { buchholz } from '@echecs/buchholz';
 import { pair as dutch } from '@echecs/swiss';
 import { Tournament } from '@echecs/tournament';
 import { nanoid } from 'nanoid';
 import { createContext, useCallback, useMemo, useRef, useState } from 'react';
 
 import { openTournament, saveTournament } from '@/lib/file.js';
+import { DEFAULT_TIEBREAK_IDS, resolveTiebreaks } from '@/lib/tiebreaks.js';
 import type { Screen } from '@/types/index.js';
 
 import type {
@@ -12,7 +12,6 @@ import type {
   PairingResult,
   Player,
   Standing,
-  Tiebreak,
 } from '@echecs/tournament';
 import type { Tournament as TrfTournament } from '@echecs/trf';
 import type { JSX, ReactNode } from 'react';
@@ -37,6 +36,7 @@ interface TabState {
   metadata: TournamentMetadata | undefined;
   players: PlayerEntry[];
   screen: Screen;
+  selectedTiebreaks: string[];
   viewingRound: number;
 }
 
@@ -62,6 +62,7 @@ interface TabsContextValue {
 
   /* Tournament (active tab) */
   addPlayer: (player: PlayerEntry) => void;
+  addTiebreak: (id: string) => void;
   allResultsRecorded: boolean;
   currentPairings: PairingResult | undefined;
   isComplete: boolean;
@@ -71,10 +72,13 @@ interface TabsContextValue {
   players: PlayerEntry[];
   recordResult: (game: Game) => void;
   removePlayer: (id: string) => void;
+  removeTiebreak: (id: string) => void;
+  reorderTiebreak: (id: string, direction: 'up' | 'down') => void;
   round: number;
   rounds: number;
   saveToFile: () => Promise<boolean>;
   screen: Screen;
+  selectedTiebreaks: string[];
   setViewingRound: (round: number) => void;
   standings: Standing[];
   startTournament: (metadata: TournamentMetadata, rounds: number) => void;
@@ -85,8 +89,6 @@ interface TabsContextValue {
 
 const TabsContext = createContext<TabsContextValue | undefined>(undefined);
 
-const DEFAULT_TIEBREAKS: Tiebreak[] = [buchholz];
-
 function makeTab(): TabState {
   return {
     currentPairings: undefined,
@@ -94,6 +96,7 @@ function makeTab(): TabState {
     metadata: undefined,
     players: [],
     screen: 'home',
+    selectedTiebreaks: DEFAULT_TIEBREAK_IDS,
     viewingRound: 0,
   };
 }
@@ -315,6 +318,41 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
     [updateActiveTab],
   );
 
+  const addTiebreak = useCallback(
+    (id: string) => {
+      updateActiveTab((tab) => {
+        if (tab.selectedTiebreaks.includes(id)) return tab;
+        return { ...tab, selectedTiebreaks: [...tab.selectedTiebreaks, id] };
+      });
+    },
+    [updateActiveTab],
+  );
+
+  const removeTiebreak = useCallback(
+    (id: string) => {
+      updateActiveTab((tab) => ({
+        ...tab,
+        selectedTiebreaks: tab.selectedTiebreaks.filter((t) => t !== id),
+      }));
+    },
+    [updateActiveTab],
+  );
+
+  const reorderTiebreak = useCallback(
+    (id: string, direction: 'up' | 'down') => {
+      updateActiveTab((tab) => {
+        const list = [...tab.selectedTiebreaks];
+        const index = list.indexOf(id);
+        if (index === -1) return tab;
+        const target = direction === 'up' ? index - 1 : index + 1;
+        if (target < 0 || target >= list.length) return tab;
+        [list[index], list[target]] = [list[target], list[index]];
+        return { ...tab, selectedTiebreaks: list };
+      });
+    },
+    [updateActiveTab],
+  );
+
   const saveToFile = useCallback(async (): Promise<boolean> => {
     const references = getReferences(activeTabId);
     const t = references.tournament;
@@ -378,9 +416,10 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
       return [];
     }
 
-    return tournament.standings(DEFAULT_TIEBREAKS);
+    const tiebreakFns = resolveTiebreaks(activeTab?.selectedTiebreaks ?? []);
+    return tournament.standings(tiebreakFns);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tournament, version]);
+  }, [activeTab?.selectedTiebreaks, tournament, version]);
 
   const round = tournament?.currentRound ?? 0;
   const rounds = tournament?.rounds ?? 0;
@@ -403,6 +442,7 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
     () => ({
       activeTab,
       addPlayer,
+      addTiebreak,
       allResultsRecorded,
       closeTab,
       createTab,
@@ -415,11 +455,14 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
       players: activeTab?.players ?? [],
       recordResult,
       removePlayer,
+      removeTiebreak,
+      reorderTiebreak,
       round,
       rounds,
       saveToFile,
       screen: activeTab?.screen ?? 'home',
       selectTab,
+      selectedTiebreaks: activeTab?.selectedTiebreaks ?? [],
       setViewingRound,
       standings,
       startTournament,
@@ -432,6 +475,7 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
     [
       activeTab,
       addPlayer,
+      addTiebreak,
       allResultsRecorded,
       closeTab,
       createTab,
@@ -441,6 +485,8 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
       pairRound,
       recordResult,
       removePlayer,
+      removeTiebreak,
+      reorderTiebreak,
       round,
       rounds,
       saveToFile,
