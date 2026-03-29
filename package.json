@@ -14,7 +14,14 @@
     "lint:ci": "eslint \"src/**/*.{ts,tsx}\" \"*.mjs\" --max-warnings 0 && tsc --noEmit"
   },
   "dependencies": {
+    "@echecs/average-rating": "^3.0.0",
     "@echecs/buchholz": "^3.0.0",
+    "@echecs/direct-encounter": "^3.0.0",
+    "@echecs/koya": "^3.0.0",
+    "@echecs/number-of-wins": "^3.0.0",
+    "@echecs/performance-rating": "^3.0.0",
+    "@echecs/progressive": "^3.0.0",
+    "@echecs/sonneborn-berger": "^3.0.0",
     "@echecs/swiss": "^3.0.0",
     "@echecs/tournament": "^2.0.0",
     "@echecs/trf": "^3.1.1",

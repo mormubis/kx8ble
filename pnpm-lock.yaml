@@ -8,7 +8,28 @@ importers:
 
   .:
     dependencies:
+      '@echecs/average-rating':
+        specifier: ^3.0.0
+        version: 3.0.0
       '@echecs/buchholz':
+        specifier: ^3.0.0
+        version: 3.0.0
+      '@echecs/direct-encounter':
+        specifier: ^3.0.0
+        version: 3.0.0
+      '@echecs/koya':
+        specifier: ^3.0.0
+        version: 3.0.0
+      '@echecs/number-of-wins':
+        specifier: ^3.0.0
+        version: 3.0.0
+      '@echecs/performance-rating':
+        specifier: ^3.0.0
+        version: 3.0.0
+      '@echecs/progressive':
+        specifier: ^3.0.0
+        version: 3.0.0
+      '@echecs/sonneborn-berger':
         specifier: ^3.0.0
         version: 3.0.0
       '@echecs/swiss':
@@ -193,8 +214,36 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
+  '@echecs/average-rating@3.0.0':
+    resolution: {integrity: sha512-zChfS6l8wdeWRGMW0Mt7kZGvcTg2x2jhd+GwkBzC08nhEX5bkz7pAWWY+RN8KvCYkGBbWA+n9pgvD+OriLN3JQ==}
+    engines: {node: '>=20'}
+
   '@echecs/buchholz@3.0.0':
     resolution: {integrity: sha512-cncoOgRJt5AjDR0z7wgP1WY55hi0doxfl2mL28Mdmbrsmkuvzu+r/7tUjZ93z0POAHy8ksUjIvh8HpMgtNijXw==}
+    engines: {node: '>=20'}
+
+  '@echecs/direct-encounter@3.0.0':
+    resolution: {integrity: sha512-TyzAFiKJrcIlM0yJhNuNl7zLb9H+7jOUA3UDZ2CDuxMigI67kqycbPbH4TRZw1gTNBFIOv63KpqlpkNuqdhHyA==}
+    engines: {node: '>=20'}
+
+  '@echecs/koya@3.0.0':
+    resolution: {integrity: sha512-UPY5iEzSdMi4/PJgg50mNrsTr62oTI5BUu703tbGFo24RfDWm5SubQW5xKiVzMoDwpnXSzIWHhMwtAqxBMDJhQ==}
+    engines: {node: '>=20'}
+
+  '@echecs/number-of-wins@3.0.0':
+    resolution: {integrity: sha512-6EeBVTnKuzsylgPogItqILplOIs9CZCX74DG73BAK0+nk8DKxUEJOwc842KCzZsl2qGQhKyXPLn9t9sIN/ZGfA==}
+    engines: {node: '>=20'}
+
+  '@echecs/performance-rating@3.0.0':
+    resolution: {integrity: sha512-cObPGhC+qj8b2hToQPgSB5bD6/CZx+NEckh9KLWWWeXbY5usfiUrYFvN827ymhGcVuKL7lxLS+UDbFcJ5OVQeA==}
+    engines: {node: '>=20'}
+
+  '@echecs/progressive@3.0.0':
+    resolution: {integrity: sha512-JFJDSbagOT1L3JVYKDJTS8bBuzZRMQmk5EHLnM+wpY+McdUQYi2xoKV20NW1Rxal9yr/VEvhtzISAiAGho0+fw==}
+    engines: {node: '>=20'}
+
+  '@echecs/sonneborn-berger@3.0.0':
+    resolution: {integrity: sha512-4FvfpV8pRng7mmm4CSAED9b9UwVhSGp1GPvrKwSb+Pv3qiCatLmuLv+L3pXdfU644hXI8sWxqDWl7d2+hShqLw==}
     engines: {node: '>=20'}
 
   '@echecs/swiss@3.0.0':
@@ -2663,7 +2712,21 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
+  '@echecs/average-rating@3.0.0': {}
+
   '@echecs/buchholz@3.0.0': {}
+
+  '@echecs/direct-encounter@3.0.0': {}
+
+  '@echecs/koya@3.0.0': {}
+
+  '@echecs/number-of-wins@3.0.0': {}
+
+  '@echecs/performance-rating@3.0.0': {}
+
+  '@echecs/progressive@3.0.0': {}
+
+  '@echecs/sonneborn-berger@3.0.0': {}
 
   '@echecs/swiss@3.0.0': {}
 
