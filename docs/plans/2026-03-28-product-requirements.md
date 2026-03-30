@@ -295,15 +295,17 @@ All lists must be printable and exportable to Excel/CSV:
 
 ## 10. File I/O
 
-### 10.1 Native Format
-- Save/load tournament state to `.echecs` JSON files via Tauri FS plugin
+### 10.1 Native Format — TRF
+Kx8ble uses the FIDE Tournament Report File (TRF) as its native save format. No proprietary file format.
+- **Save/Load:** TRF26 files (`.trf`) — the FIDE standard data exchange format
 - Auto-save on pairing and result entry
-- Backup files created automatically on save (configurable count)
+- All tournament state must round-trip through TRF: players, pairings, results, metadata, tiebreak configuration (tags 202/212), byes, forfeits, accelerated rounds
+- Data that has no TRF representation (UI state, screen position) is ephemeral and not persisted
 
-### 10.2 TRF Import/Export
-- **Import:** Load tournament from TRF16 file — players, results, pairings, metadata
-- **Export:** Generate TRF16 file for FIDE rating submission
-- Preserve TRF source data for round-trip fidelity
+### 10.2 Swiss-Manager Import
+- **Import:** Read Swiss-Manager `.TUNX` files (read-only, not a save format)
+- Extract full tournament state: players, pairings, results, metadata, tiebreak configuration, player exclusions, age groups, club numbers
+- This is a one-way import — Kx8ble saves as TRF, not TUNX
 
 ### 10.3 Data Import
 - **Excel import:** Import player lists from .xlsx files
@@ -312,6 +314,7 @@ All lists must be printable and exportable to Excel/CSV:
 - **National rating list import:** Import federation-specific rating lists
 
 ### 10.4 Data Export
+- **TRF export:** Generate TRF26 file for FIDE rating submission
 - **Excel export:** Export any list/table to .xlsx
 - **CSV export:** Export any list/table to .csv
 
@@ -328,8 +331,7 @@ All lists must be printable and exportable to Excel/CSV:
 - `Cmd/Ctrl + N` — New tournament
 - `Cmd/Ctrl + O` — Open tournament file
 - `Cmd/Ctrl + S` — Save tournament
-- `Cmd/Ctrl + T` — New tab
-- `Cmd/Ctrl + W` — Close tab
+- `Cmd/Ctrl + W` — Close tournament
 - Result entry shortcuts: `1` = 1-0, `2` = 1/2-1/2, `3` = 0-1, `4` = 1F-0F, `5` = 0F-1F, `6` = 0F-0F, `0` = clear
 
 ### 11.3 Theming
