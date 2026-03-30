@@ -6,6 +6,9 @@ application built with Tauri v2 + React + TypeScript.
 See the root `AGENTS.md` for workspace-wide conventions (TypeScript settings,
 formatting, naming, ESLint rules).
 
+**Backlog:** See [`BACKLOG.md`](BACKLOG.md) for pending work items. Update it
+after completing any work.
+
 ---
 
 ## Project Overview
