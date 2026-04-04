@@ -363,10 +363,25 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
 
   const updateMetadata = useCallback(
     (fields: Partial<TournamentMetadata>) => {
-      updateActiveTab((tab) => ({
-        ...tab,
-        metadata: tab.metadata ? { ...tab.metadata, ...fields } : undefined,
-      }));
+      updateActiveTab((tab) => {
+        const current = tab.metadata ?? {
+          arbiter: '',
+          director: '',
+          endDate: '',
+          federation: '',
+          fideRated: false,
+          location: '',
+          name: '',
+          nationallyRated: false,
+          organizer: '',
+          pairingSystem: 'dutch',
+          startDate: '',
+          timeControl: '',
+          timeControlType: 'standard',
+          tournamentType: 'individual-swiss',
+        };
+        return { ...tab, metadata: { ...current, ...fields } };
+      });
     },
     [updateActiveTab],
   );
