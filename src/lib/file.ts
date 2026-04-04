@@ -260,9 +260,15 @@ function appToTrf(
 
   return {
     ...trfSource,
+    chiefArbiter: metadata.arbiter || undefined,
+    city: metadata.location || undefined,
+    endDate: metadata.endDate || undefined,
+    federation: metadata.federation || undefined,
     name: metadata.name,
     players: trfPlayers,
     rounds: tournament.rounds,
+    startDate: metadata.startDate || undefined,
+    timeControl: metadata.timeControl || undefined,
     version: trfSource?.version ?? 'TRF16',
   };
 }
