@@ -18,9 +18,11 @@ Last updated: 2026-03-29
 
 ## Medium
 
-- [ ] Result editing — `@echecs/tournament` appends games instead of replacing.
-      Current workaround: reconstruct via `Tournament.fromJSON()`. Library needs
-      `updateResult` API.
+- [ ] Result editing — `@echecs/tournament@2.0.0` appends games instead of
+      replacing. Current workaround: reconstruct via `Tournament.fromJSON()`.
+      The library source already has `updateResult` and `clearResult` but they
+      haven't been published yet. **Blocked on `@echecs/tournament` v3
+      release.** See root `docs/BACKLOG.md` cross-package section.
 - [ ] Forfeit/bye distinction — UI shows forfeit options but they map to same
       numeric values. Library needs `GameKind` support in result recording.
 - [ ] Clear result — cannot undo a recorded result (no `clearResult` API in
