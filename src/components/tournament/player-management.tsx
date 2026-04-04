@@ -272,9 +272,7 @@ function PlayerManagement(): JSX.Element {
   } = useTabs();
 
   const [showAdd, setShowAdd] = useState(false);
-  const [editingPlayer, setEditingPlayer] = useState<PlayerEntry | undefined>(
-    
-  );
+  const [editingPlayer, setEditingPlayer] = useState<PlayerEntry | undefined>();
 
   /* ── Handlers ── */
 
@@ -317,9 +315,23 @@ function PlayerManagement(): JSX.Element {
   };
 
   const handleStartTournament = () => {
-    if (metadata) {
-      startTournament(metadata, rounds);
-    }
+    const meta = metadata ?? {
+      arbiter: '',
+      director: '',
+      endDate: '',
+      federation: '',
+      fideRated: false,
+      location: '',
+      name: '',
+      nationallyRated: false,
+      organizer: '',
+      pairingSystem: 'dutch',
+      startDate: '',
+      timeControl: '',
+      timeControlType: 'standard',
+      tournamentType: 'individual-swiss',
+    };
+    startTournament(meta, rounds);
   };
 
   /* ── Edit form initial data ── */

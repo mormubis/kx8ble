@@ -313,8 +313,20 @@ async function openTournament(): Promise<LoadResult | undefined> {
 
   return {
     metadata: {
-      createdAt: trfTournament.startDate ?? new Date().toISOString(),
+      arbiter: trfTournament.chiefArbiter ?? '',
+      director: '',
+      endDate: trfTournament.endDate ?? '',
+      federation: trfTournament.federation ?? '',
+      fideRated: false,
+      location: trfTournament.city ?? '',
       name: trfTournament.name ?? 'Unnamed Tournament',
+      nationallyRated: false,
+      organizer: '',
+      pairingSystem: 'dutch',
+      startDate: trfTournament.startDate ?? '',
+      timeControl: trfTournament.timeControl ?? '',
+      timeControlType: 'standard',
+      tournamentType: 'individual-swiss',
     },
     players,
     tournament,

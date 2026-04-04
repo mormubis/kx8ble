@@ -7,20 +7,27 @@ import { openTournament, saveTournament } from '@/lib/file.js';
 import { DEFAULT_TIEBREAK_IDS, resolveTiebreaks } from '@/lib/tiebreaks.js';
 import type { Screen } from '@/types/index.js';
 
-import type {
-  Game,
-  PairingResult,
-  Player,
-  Standing,
-} from '@echecs/tournament';
+import type { Game, PairingResult, Player, Standing } from '@echecs/tournament';
 import type { Tournament as TrfTournament } from '@echecs/trf';
 import type { JSX, ReactNode } from 'react';
 
 /* ── Types ── */
 
 interface TournamentMetadata {
-  createdAt: string;
+  arbiter: string;
+  director: string;
+  endDate: string;
+  federation: string;
+  fideRated: boolean;
+  location: string;
   name: string;
+  nationallyRated: boolean;
+  organizer: string;
+  pairingSystem: string;
+  startDate: string;
+  timeControl: string;
+  timeControlType: string;
+  tournamentType: string;
 }
 
 interface PlayerEntry {
@@ -76,6 +83,7 @@ interface TabsContextValue {
   reorderTiebreak: (id: string, direction: 'up' | 'down') => void;
   round: number;
   rounds: number;
+  updateMetadata: (fields: Partial<TournamentMetadata>) => void;
   saveToFile: () => Promise<boolean>;
   screen: Screen;
   selectedTiebreaks: string[];
@@ -353,6 +361,16 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
     [updateActiveTab],
   );
 
+  const updateMetadata = useCallback(
+    (fields: Partial<TournamentMetadata>) => {
+      updateActiveTab((tab) => ({
+        ...tab,
+        metadata: tab.metadata ? { ...tab.metadata, ...fields } : undefined,
+      }));
+    },
+    [updateActiveTab],
+  );
+
   const saveToFile = useCallback(async (): Promise<boolean> => {
     const references = getReferences(activeTabId);
     const t = references.tournament;
@@ -468,6 +486,7 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
       startTournament,
       tabs,
       tournament,
+      updateMetadata,
       updatePlayer,
       viewingRound: activeTab?.viewingRound ?? 0,
     }),
@@ -496,6 +515,7 @@ function TabsProvider({ children }: TabsProviderProperties): JSX.Element {
       startTournament,
       tabs,
       tournament,
+      updateMetadata,
       updatePlayer,
       version,
     ],
