@@ -3,6 +3,8 @@
 Agent guidance for **Kx8ble** — a desktop chess tournament management
 application built with Tauri v2 + React + TypeScript.
 
+**See also:** [`REFERENCES.md`](REFERENCES.md)
+
 See the root `AGENTS.md` for workspace-wide conventions (TypeScript settings,
 formatting, naming, ESLint rules).
 
@@ -103,24 +105,3 @@ kx8ble/
   package.json
 ```
 
----
-
-## FIDE Packages Used
-
-| Package              | Purpose                             |
-| -------------------- | ----------------------------------- |
-| `@echecs/tournament` | Tournament lifecycle orchestration  |
-| `@echecs/swiss`      | Dutch pairing, standings, tiebreaks |
-
----
-
-## Naming Conventions
-
-Same as the root `AGENTS.md` plus:
-
-| Construct        | Convention       | Examples                   |
-| ---------------- | ---------------- | -------------------------- |
-| React components | `PascalCase.tsx` | `RoundView.tsx`, `App.tsx` |
-| Hooks            | `camelCase.ts`   | `useTournament.ts`         |
-| Context files    | `PascalCase.tsx` | `TournamentContext.tsx`    |
-| Utility files    | `camelCase.ts`   | `utilities.ts`, `file.ts`  |
